@@ -1,0 +1,13 @@
+{
+    "name": "pharmadem/employee-evaluation-system",
+    "description": "Employee Daily Work Update & Performance Evaluation System",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
