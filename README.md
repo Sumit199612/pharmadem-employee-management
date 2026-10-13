@@ -1,139 +1,119 @@
-# Employee Daily Work Update &amp; Performance Evaluation System
+# PharmaDEM - Employee Work Update & Performance Evaluation System
 
-An enterprise-ready, modular, and secure foundation for managing employee tasks, daily updates, and performance evaluations using **Vanilla PHP 8.1+ (Object-Oriented with PDO)** and **MySQL 8.0+**.
+Web-based employee management portal built with PHP (OOP + PDO) and MySQL. Supports role-based access control (Admin, Manager, Employee), task management, daily work updates, performance scoring, and CSV/print reporting.
 
----
+## Features
 
-## 📁 Project Architecture & Directory Layout
+- **Authentication & Roles**: Role-based access control for Admin, Manager, and Employee roles.
+- **Task Management**: Create, assign, prioritize, and track task statuses (Pending, In Progress, Completed, Overdue).
+- **Daily Work Logs**: Daily to-do, completed items, blockers, and manager review notes.
+- **Performance Evaluations**: Period-based scorecards (completion, punctuality, quality) and automated performance metrics.
+- **Reporting & Exports**: Export daily logs and performance summaries to CSV or printable format.
+- **Security**: Prepared statements across all queries, CSRF validation, bcrypt password hashing, and cookie session security.
+
+## Tech Stack
+
+- **Backend**: PHP 8.2 (Vanilla OOP, PDO)
+- **Database**: MySQL 8.0
+- **Frontend**: Tailwind CSS (CDN), Vanilla JavaScript
+- **Containerization**: Docker & Docker Compose
+- **Web Server**: Apache (`mod_rewrite` enabled)
+
+## Project Structure
 
 ```
 ├── config/
-│   └── database.php                  # Database credentials & PDO options
+│   └── database.php          # Database configuration
 ├── database/
-│   ├── schema.sql                    # Production SQL schema with FKs, indexes & seeds
-│   └── seed.php                      # DB seeder for Admin, Manager, and Employee test accounts
-├── public/                           # Web document root
-│   ├── .htaccess                     # URL rewrite rules & security headers
-│   ├── index.php                     # Front controller & auto-redirect
-│   ├── login.php                     # Hardened authentication page (password_verify + CSRF)
-│   ├── logout.php                    # Secure session destruction
-│   ├── admin/
-│   │   └── dashboard.php             # Admin-only dashboard (Auth::requireRole('Admin'))
-│   ├── manager/
-│   │   └── dashboard.php             # Manager portal (Auth::requireRole(['Manager', 'Admin']))
-│   └── employee/
-│       └── dashboard.php             # Employee portal (Auth::requireRole(['Employee', 'Manager', 'Admin']))
+│   ├── schema.sql            # Table schema, indexes, and initial data
+│   └── seed.php              # Seed script for default accounts & sample data
+├── docker/
+│   └── apache/
+│       └── vhost.conf        # Apache virtual host configuration
+├── public/                   # Document root
+│   ├── admin/                # Admin dashboards
+│   ├── employee/             # Employee portal (tasks, daily updates, history)
+│   ├── manager/              # Manager dashboard (team tasks, reviews, evaluations)
+│   ├── export.php            # CSV and printable report exporter
+│   ├── index.php             # Front controller redirect
+│   ├── login.php             # User login
+│   └── logout.php            # Session termination
 ├── src/
-│   ├── Core/
-│   │   ├── Auth.php                  # RBAC & authentication service
-│   │   ├── Csrf.php                  # Timing-attack-safe CSRF generator and validator
-│   │   ├── Database.php              # Thread-safe Singleton PDO Connection & Query manager
-│   │   ├── Env.php                   # Zero-dependency .env environment variable parser
-│   │   ├── Session.php               # Hardened session manager (Strict, HttpOnly, Lax)
-│   │   └── Exceptions/
-│   │       └── DatabaseException.php # Sanitized exception preventing credential leaks
-│   ├── Models/
-│   │   └── User.php                  # User entity with secure password hashing & queries
-│   ├── Views/
-│   │   └── partials/
-│   │       └── nav.php               # Role-aware navigation bar
-│   └── autoload.php                  # PSR-4 standalone autoloader
-├── .env.example                      # Environment configuration template
-├── .env                              # Local runtime credentials (git-ignored)
-├── .gitignore                        # Excludes vendor, logs, and sensitive .env
-├── composer.json                     # Modern PSR-4 setup for optional Composer usage
-├── seed.php                          # Root convenience wrapper for database/seed.php
-└── README.md
+│   ├── Core/                 # Auth, Database, Session, Csrf, Env
+│   ├── Models/               # User, Task, DailyUpdate, Evaluation
+│   ├── Views/partials/       # Navigation & layout partials
+│   └── autoload.php          # PSR-4 autoloader
+├── .env.example              # Sample environment configuration
+├── docker-compose.yml        # Docker service definitions
+├── Dockerfile                # PHP Apache container image
+└── seed.php                  # Root CLI runner for database seeder
 ```
 
----
+## Getting Started
 
-## 🔐 Authentication & RBAC Highlights
+### Option 1: Docker (Recommended)
 
-1. **Password Hashing & Verification**:
-   - Accounts use `PASSWORD_BCRYPT` with cost 12.
-   - Authentication verifies hashes via `password_verify()`.
-   - Automatic re-hashing via `password_needs_rehash()` if algorithm parameters are upgraded.
+1. Clone the repository and navigate into the project directory:
+   ```bash
+   git clone https://github.com/Sumit199612/pharmadem-employee-management.git
+   cd pharmadem-employee-management
+   ```
 
-2. **Session Security ([`src/Core/Session.php`](file:///d:/PharmaDEM%20Solutions%20Assignment/src/Core/Session.php))**:
-   - `HttpOnly: true` (prevents malicious JavaScript/XSS cookie exfiltration).
-   - `SameSite: Lax` (mitigates Cross-Site Request Forgery).
-   - `Session::regenerate()` called immediately on login to prevent **Session Fixation attacks**.
-   - Single-use flash message support (`setFlash()`, `getFlash()`).
+2. Copy the environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-3. **RBAC Middleware Functions ([`src/Core/Auth.php`](file:///d:/PharmaDEM%20Solutions%20Assignment/src/Core/Auth.php))**:
-   - `Auth::requireLogin($loginUrl = '/login.php')`: Halts unauthenticated visitors and preserves intended destination URL.
-   - `Auth::requireRole($roles)`: Blocks users without appropriate roles, redirecting them to their respective dashboard with a toast warning.
-   - `Auth::redirectIfAuthenticated()`: Forwards authenticated users away from the login page.
-   - `Auth::isAdmin()`, `Auth::isManager()`, `Auth::isEmployee()`.
+3. Build and start containers:
+   ```bash
+   docker compose up -d --build
+   ```
 
----
+4. The application services will be available at:
+   - **Web Application**: http://localhost:8080
+   - **phpMyAdmin**: http://localhost:8081
+   - **MySQL**: localhost:3307
 
-## 📊 Manager & Admin Modules
+### Option 2: Local PHP + MySQL
 
-1. **Manager Overview Dashboard (`/manager/dashboard.php?tab=overview`)**:
-   - Real-time KPI metrics: Total Tasks, Completed Tasks, Active In Progress, Overdue Tasks, and Today's Daily Update Compliance rate (`X / Y filed`).
-   - Scoped by manager's department (with admin oversight across all departments).
+1. Ensure PHP 8.1+ and MySQL are installed.
+2. Create the database and import the schema:
+   ```bash
+   mysql -u root -p < database/schema.sql
+   ```
+3. Copy `.env.example` to `.env` and set your database credentials.
+4. Run the seed script:
+   ```bash
+   php seed.php
+   ```
+5. Start the local server:
+   ```bash
+   php -S localhost:8000 -t public
+   ```
+   Open `http://localhost:8000` in your browser.
 
-2. **Task Assignment Engine (`/manager/dashboard.php?tab=overview`)**:
-   - Task creation and team delegation form with CSRF protection.
-   - Priority levels: `Low`, `Medium`, `High`, `Urgent`.
-   - Date picker constraint (`min="today"`) and instructions/SOP references.
+## Default Credentials
 
-3. **Automated Overdue Tracker**:
-   - Dynamically checks tasks past their `due_date` and transitions status to `'Overdue'` via `Task::updateOverdueTasks()`.
-   - Triggers automatically upon dashboard loading and task queries to guarantee real-time SLA metrics.
-   - Distinct overdue warning badges and dedicated status filter.
+All seed accounts use the default password: `Password@123`
 
-4. **Daily Updates Review Queue (`/manager/dashboard.php?tab=updates`)**:
-   - Filter by `All`, `Awaiting Review`, and `Reviewed`.
-   - Shows To-Do items, Completed deliverables, and Pending Blockers.
-   - Inline feedback form allowing managers to write notes, approve, and record timestamps (`reviewed_at`).
+| Role | Email | Accessible Dashboards |
+| :--- | :--- | :--- |
+| **Admin** | `admin@pharmadem.local` | `/admin/dashboard.php`, `/manager/dashboard.php`, `/employee/dashboard.php` |
+| **Manager** | `manager@pharmadem.local` | `/manager/dashboard.php`, `/employee/dashboard.php` |
+| **Employee** | `employee@pharmadem.local` | `/employee/dashboard.php` |
 
-5. **Performance Evaluation & Analytics (`/manager/dashboard.php?tab=analytics` & `?tab=evaluations`)**:
-   - Evaluation scorecard input for: Task Completion, Punctuality, and Quality (0–100 scale) with live overall preview.
-   - Qualitative assessment notes and auto-calculated stored overall score.
-   - Real-time automated metrics comparison: Task Completion Rate (%), On-Time Delivery Rate (%), and Overdue Rate (%) alongside manager ratings.
+## Environment Configuration
 
-6. **Compliance Reporting & Data Export (`/export.php`)**:
-   - Clean UTF-8 CSV exports with Excel BOM:
-     - `export.php?type=daily_updates&format=csv` (Work Logs)
-     - `export.php?type=performance_summary&format=csv` (Completion Analytics)
-     - `export.php?type=evaluations&format=csv` (Evaluation Scorecards)
-   - Printable Executive HTML Reports formatted for `@media print` and PDF export.
+Configuration variables can be defined in `.env`:
 
-7. **Admin Control Center (`/admin/dashboard.php`)**:
-   - Cross-department staff distribution and department management.
-   - Full system user directory with RBAC verification.
-
----
-
-## 👥 Default Seed Test Accounts
-
-Run the seeder using either CLI or browser:
-```bash
-php seed.php
-# or
-php database/seed.php
+```ini
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=employee_management_db
+DB_USER=root
+DB_PASS=
+APP_ENV=development
+APP_DEBUG=true
 ```
 
-| Role | Email | Password | Allowed Dashboards |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@pharmadem.local` | `Password@123` | `/admin/dashboard.php`, `/manager/dashboard.php`, `/employee/dashboard.php` |
-| **Manager** | `manager@pharmadem.local` | `Password@123` | `/manager/dashboard.php`, `/employee/dashboard.php` |
-| **Employee** | `employee@pharmadem.local` | `Password@123` | `/employee/dashboard.php` |
-
-*(Quick-autofill buttons are embedded directly into `/login.php` for seamless testing!)*
-
----
-
-## 🚀 Running the Project
-
-```bash
-# 1. Start local PHP development server
-php -S localhost:8000 -t public
-
-# 2. Access portal in your browser:
-# http://localhost:8000/login.php
-```
-
+When running in Docker, Docker Compose provides these environment variables to the container automatically.

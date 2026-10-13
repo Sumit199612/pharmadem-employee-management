@@ -81,9 +81,9 @@ class Task
     }
 
     /**
-     * Automated Overdue Tracker: Flags all tasks past due date as 'Overdue'.
+     * Flags tasks past due date as overdue.
      *
-     * @return int Number of affected rows
+     * @return int
      */
     public static function updateOverdueTasks(): int
     {

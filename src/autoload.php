@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PSR-4 Autoloader for App namespace (Vanilla PHP Zero-Dependency).
+ * PSR-4 autoloader for App namespace.
  */
 spl_autoload_register(function (string $class): void {
     $prefix = 'App\\';

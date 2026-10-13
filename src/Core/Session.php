@@ -4,17 +4,10 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-/**
- * Class Session
- * Hardened session management with strict cookie flags, regeneration, and flash messages.
- */
 class Session
 {
     private static bool $started = false;
 
-    /**
-     * Start secure session if not already active.
-     */
     public static function start(): void
     {
         if (self::$started || session_status() === PHP_SESSION_ACTIVE) {
@@ -25,14 +18,13 @@ class Session
         $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
                     ($_SERVER['SERVER_PORT'] ?? 80) == 443;
 
-        // Strict security cookie attributes
         session_set_cookie_params([
-            'lifetime' => 0,              // Session cookie (until browser closes)
+            'lifetime' => 0,
             'path'     => '/',
             'domain'   => '',
-            'secure'   => $isSecure,      // Transmit only over HTTPS if available
-            'httponly' => true,           // Prevent JavaScript access (XSS mitigation)
-            'samesite' => 'Lax',          // Mitigate CSRF
+            'secure'   => $isSecure,
+            'httponly' => true,
+            'samesite' => 'Lax',
         ]);
 
         ini_set('session.use_only_cookies', '1');
@@ -66,27 +58,18 @@ class Session
         unset($_SESSION[$key]);
     }
 
-    /**
-     * Regenerate session ID to prevent session fixation attacks.
-     */
     public static function regenerate(): void
     {
         self::start();
         session_regenerate_id(true);
     }
 
-    /**
-     * Set a flash message that lasts for only one request.
-     */
     public static function setFlash(string $type, string $message): void
     {
         self::start();
         $_SESSION['_flash'][$type] = $message;
     }
 
-    /**
-     * Retrieve and clear flash message.
-     */
     public static function getFlash(string $type): ?string
     {
         self::start();
@@ -98,9 +81,6 @@ class Session
         return null;
     }
 
-    /**
-     * Destroy current session completely.
-     */
     public static function destroy(): void
     {
         self::start();

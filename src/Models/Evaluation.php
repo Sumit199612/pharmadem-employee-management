@@ -138,8 +138,7 @@ class Evaluation
     }
 
     /**
-     * Performance Summary View: Analytics comparing automated task completion rates
-     * (on-time vs overdue) alongside manager ratings.
+     * Aggregates employee task metrics and evaluation scores.
      *
      * @param int|null $departmentId
      * @return array

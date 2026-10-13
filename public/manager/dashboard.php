@@ -27,7 +27,7 @@ $departmentFilter = ($currentUser['role'] === 'Manager' && !empty($currentUser['
     ? (int) $currentUser['department_id'] 
     : null;
 
-// Always trigger automated overdue tracker on dashboard load
+// Update overdue tasks
 Task::updateOverdueTasks();
 
 $flashSuccess = Session::getFlash('success');
@@ -333,9 +333,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
             </nav>
         </div>
 
-        <!-- ================================================================= -->
-        <!-- TAB 1: Overview & Task Assignment Engine                          -->
-        <!-- ================================================================= -->
+        <!-- Overview Tab -->
         <?php if ($currentTab === 'overview'): ?>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Task Assignment Form (5 Cols) -->
@@ -508,9 +506,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 2: Team Task Management Board                                -->
-        <!-- ================================================================= -->
+        <!-- Tasks Tab -->
         <?php if ($currentTab === 'tasks'): ?>
             <div class="space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900 border border-slate-800 p-3 rounded-xl">
@@ -604,9 +600,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 3: Daily Updates Review Queue                                 -->
-        <!-- ================================================================= -->
+        <!-- Updates Tab -->
         <?php if ($currentTab === 'updates'): ?>
             <div class="space-y-4">
                 <div class="flex items-center justify-between bg-slate-900 border border-slate-800 p-3 rounded-xl text-xs">
@@ -703,9 +697,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 4: Performance Summary View & Analytics                       -->
-        <!-- ================================================================= -->
+        <!-- Analytics Tab -->
         <?php if ($currentTab === 'analytics'): ?>
             <div class="space-y-6">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900 border border-slate-800 p-5 rounded-xl">
@@ -715,10 +707,10 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
                     </div>
                     <div class="flex items-center space-x-2">
                         <a href="/export.php?type=performance_summary&format=csv" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg border border-slate-700 transition flex items-center">
-                            ⬇️ CSV Export
+                            CSV Export
                         </a>
                         <a href="/export.php?type=performance_summary&format=html" target="_blank" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-xs font-semibold text-white rounded-lg transition flex items-center">
-                            🖨️ Printable Summary
+                            Printable Summary
                         </a>
                     </div>
                 </div>
@@ -789,9 +781,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 5: Evaluation Form & Historical Log                           -->
-        <!-- ================================================================= -->
+        <!-- Evaluations Tab -->
         <?php if ($currentTab === 'evaluations'): ?>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <!-- Evaluation Form (5 Cols) -->
@@ -934,7 +924,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
                     <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                         <h3 class="text-sm font-semibold text-white">Evaluations Log (<?= count($allEvaluations) ?>)</h3>
                         <a href="/export.php?type=evaluations&format=csv" class="text-xs text-purple-400 hover:underline">
-                            ⬇️ Export Evaluations CSV
+                            Export Evaluations CSV
                         </a>
                     </div>
 
@@ -981,9 +971,7 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 6: Reporting & Export Center                                 -->
-        <!-- ================================================================= -->
+        <!-- Exports Tab -->
         <?php if ($currentTab === 'exports'): ?>
             <div class="space-y-6 max-w-4xl mx-auto">
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
@@ -1002,10 +990,10 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
                             </div>
                             <div class="space-y-2">
                                 <a href="/export.php?type=daily_updates&format=csv" class="block w-full text-center py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition shadow-sm">
-                                    ⬇️ Download CSV File
+                                    Download CSV File
                                 </a>
                                 <a href="/export.php?type=daily_updates&format=html" target="_blank" class="block w-full text-center py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg transition border border-slate-700">
-                                    🖨️ Printable HTML View
+                                    Printable HTML View
                                 </a>
                             </div>
                         </div>
@@ -1019,10 +1007,10 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
                             </div>
                             <div class="space-y-2">
                                 <a href="/export.php?type=performance_summary&format=csv" class="block w-full text-center py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition shadow-sm">
-                                    ⬇️ Download CSV File
+                                    Download CSV File
                                 </a>
                                 <a href="/export.php?type=performance_summary&format=html" target="_blank" class="block w-full text-center py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg transition border border-slate-700">
-                                    🖨️ Printable HTML View
+                                    Printable HTML View
                                 </a>
                             </div>
                         </div>
@@ -1036,10 +1024,10 @@ $allEvaluations = Evaluation::getAllEvaluations($departmentFilter);
                             </div>
                             <div class="space-y-2">
                                 <a href="/export.php?type=evaluations&format=csv" class="block w-full text-center py-2 px-3 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition shadow-sm">
-                                    ⬇️ Download CSV File
+                                    Download CSV File
                                 </a>
                                 <a href="/export.php?type=evaluations&format=html" target="_blank" class="block w-full text-center py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg transition border border-slate-700">
-                                    🖨️ Printable HTML View
+                                    Printable HTML View
                                 </a>
                             </div>
                         </div>

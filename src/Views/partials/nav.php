@@ -29,12 +29,12 @@ $flashError = Session::getFlash('error');
 
 <?php if ($flashSuccess): ?>
     <div style="max-width: 1000px; margin: 1.5rem auto 0; padding: 0.75rem 1rem; border-radius: 6px; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.875rem;">
-        ✅ <?= htmlspecialchars($flashSuccess) ?>
+        <?= htmlspecialchars($flashSuccess) ?>
     </div>
 <?php endif; ?>
 
 <?php if ($flashError): ?>
     <div style="max-width: 1000px; margin: 1.5rem auto 0; padding: 0.75rem 1rem; border-radius: 6px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.875rem;">
-        ⚠️ <?= htmlspecialchars($flashError) ?>
+        <?= htmlspecialchars($flashError) ?>
     </div>
 <?php endif; ?>

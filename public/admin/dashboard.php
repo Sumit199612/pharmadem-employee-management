@@ -21,7 +21,7 @@ Auth::requireRole('Admin');
 
 $currentUser = Auth::user();
 
-// Run automated overdue tracker
+// Sync overdue tasks
 Task::updateOverdueTasks();
 
 $flashSuccess = Session::getFlash('success');

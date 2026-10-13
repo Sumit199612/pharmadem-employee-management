@@ -1,7 +1,4 @@
 services:
-  # ---------------------------------------------------------------------------
-  # 1. PHP Application Service (PHP 8.2 + Apache)
-  # ---------------------------------------------------------------------------
   app:
     build:
       context: .
@@ -22,16 +19,13 @@ services:
       APP_ENV: development
       APP_DEBUG: "true"
       APP_URL: "http://localhost:8080"
-      APP_NAME: "Employee Daily Work & Evaluation System (Docker)"
+      APP_NAME: "PharmaDEM Employee Management Portal"
     depends_on:
       db:
         condition: service_healthy
     networks:
       - pharmadem_net
 
-  # ---------------------------------------------------------------------------
-  # 2. Database Service (MySQL 8.0)
-  # ---------------------------------------------------------------------------
   db:
     image: mysql:8.0
     container_name: pharmadem_db
@@ -44,7 +38,6 @@ services:
       MYSQL_DATABASE: employee_management_db
     volumes:
       - pharmadem_db_data:/var/lib/mysql
-      # Auto-import schema, tables, foreign keys, indexes, and initial seeds on first launch
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -proot_secret_123 --silent"]
@@ -55,9 +48,6 @@ services:
     networks:
       - pharmadem_net
 
-  # ---------------------------------------------------------------------------
-  # 3. Database Management UI (phpMyAdmin)
-  # ---------------------------------------------------------------------------
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: pharmadem_phpmyadmin
@@ -74,9 +64,6 @@ services:
     networks:
       - pharmadem_net
 
-# -----------------------------------------------------------------------------
-# Persistent Volumes & Custom Network
-# -----------------------------------------------------------------------------
 volumes:
   pharmadem_db_data:
     driver: local

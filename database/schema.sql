@@ -1,20 +1,12 @@
--- ============================================================================
--- Database Schema: Employee Daily Work Update & Performance Evaluation System
--- Engine: MySQL 8.0+ / MariaDB 10.4+ (InnoDB Engine, utf8mb4)
--- ============================================================================
-
 CREATE DATABASE IF NOT EXISTS `employee_management_db`
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 USE `employee_management_db`;
 
--- Disable foreign key checks during schema creation
 SET FOREIGN_KEY_CHECKS = 0;
 
--- ----------------------------------------------------------------------------
--- Table 0: departments (Normalized reference table for department_id)
--- ----------------------------------------------------------------------------
+-- Departments
 DROP TABLE IF EXISTS `departments`;
 CREATE TABLE `departments` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -23,10 +15,7 @@ CREATE TABLE `departments` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ----------------------------------------------------------------------------
--- Table 1: users
--- Roles: Admin, Manager, Employee
--- ----------------------------------------------------------------------------
+-- Users
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -50,11 +39,7 @@ CREATE INDEX `idx_users_role` ON `users` (`role`);
 CREATE INDEX `idx_users_department_id` ON `users` (`department_id`);
 CREATE INDEX `idx_users_status` ON `users` (`status`);
 
--- ----------------------------------------------------------------------------
--- Table 2: tasks
--- Priority: Low, Medium, High, Urgent
--- Status: Pending, In Progress, Completed, Overdue
--- ----------------------------------------------------------------------------
+-- Tasks
 DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE `tasks` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -89,11 +74,7 @@ CREATE INDEX `idx_tasks_priority` ON `tasks` (`priority`);
 CREATE INDEX `idx_tasks_due_date` ON `tasks` (`due_date`);
 CREATE INDEX `idx_tasks_assigned_status` ON `tasks` (`assigned_to`, `status`);
 
--- ----------------------------------------------------------------------------
--- Table 3: daily_updates
--- Status: Submitted, Reviewed
--- One daily update per employee per calendar day
--- ----------------------------------------------------------------------------
+-- Daily updates
 DROP TABLE IF EXISTS `daily_updates`;
 CREATE TABLE `daily_updates` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -129,16 +110,13 @@ CREATE INDEX `idx_daily_updates_employee_id` ON `daily_updates` (`employee_id`);
 CREATE INDEX `idx_daily_updates_date` ON `daily_updates` (`update_date`);
 CREATE INDEX `idx_daily_updates_status` ON `daily_updates` (`status`);
 
--- ----------------------------------------------------------------------------
--- Table 4: performance_evaluations
--- Scores: 0.00 to 100.00 scale (or 0.00 to 10.00)
--- ----------------------------------------------------------------------------
+-- Performance evaluations
 DROP TABLE IF EXISTS `performance_evaluations`;
 CREATE TABLE `performance_evaluations` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `employee_id` INT UNSIGNED NOT NULL,
     `evaluator_id` INT UNSIGNED NOT NULL,
-    `evaluation_period` VARCHAR(20) NOT NULL COMMENT 'e.g., 2026-10 or 2026-Q3',
+    `evaluation_period` VARCHAR(20) NOT NULL,
     `task_completion_score` DECIMAL(5, 2) NOT NULL,
     `punctuality_score` DECIMAL(5, 2) NOT NULL,
     `quality_score` DECIMAL(5, 2) NOT NULL,
@@ -173,15 +151,9 @@ CREATE INDEX `idx_evaluations_employee_id` ON `performance_evaluations` (`employ
 CREATE INDEX `idx_evaluations_evaluator_id` ON `performance_evaluations` (`evaluator_id`);
 CREATE INDEX `idx_evaluations_period` ON `performance_evaluations` (`evaluation_period`);
 
--- Re-enable foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
 
--- ============================================================================
--- Seed Data for Initial Setup & Testing
--- Default Password for all seed users: Password@123
--- Hash: $2y$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
--- ============================================================================
-
+-- Seed data
 INSERT INTO `departments` (`id`, `name`, `description`) VALUES
 (1, 'Engineering', 'Software development, QA, and devops'),
 (2, 'Operations', 'Quality control and regulatory compliance'),

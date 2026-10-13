@@ -187,53 +187,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: var(--brand-hover);
         }
 
-        .test-accounts {
+        .login-footer {
             margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .test-accounts h3 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 0.75rem;
-        }
-
-        .account-chips {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .account-chip {
-            background: rgba(31, 41, 55, 0.7);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
+            text-align: center;
             font-size: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.15s, border-color 0.15s;
+            color: var(--text-secondary);
         }
-
-        .account-chip:hover {
-            background: rgba(55, 65, 81, 0.9);
-            border-color: #6b7280;
-        }
-
-        .role-tag {
-            font-weight: 600;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-        }
-
-        .role-Admin { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-        .role-Manager { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
-        .role-Employee { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
     </style>
 </head>
 <body>
@@ -246,13 +205,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if ($error): ?>
         <div class="alert alert-danger">
-            <span>⚠️</span> <?= htmlspecialchars($error) ?>
+            <?= htmlspecialchars($error) ?>
         </div>
     <?php endif; ?>
 
     <?php if ($success): ?>
         <div class="alert alert-success">
-            <span>✅</span> <?= htmlspecialchars($success) ?>
+            <?= htmlspecialchars($success) ?>
         </div>
     <?php endif; ?>
 
@@ -286,36 +245,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <button type="submit" class="btn-submit">
-            Sign In to Portal
+            Sign In
         </button>
     </form>
 
-    <div class="test-accounts">
-        <h3>Quick Test Credentials (Click to Autofill)</h3>
-        <div class="account-chips">
-            <div class="account-chip" onclick="fillCreds('admin@pharmadem.local', 'Password@123')">
-                <span>admin@pharmadem.local</span>
-                <span class="role-tag role-Admin">Admin</span>
-            </div>
-            <div class="account-chip" onclick="fillCreds('manager@pharmadem.local', 'Password@123')">
-                <span>manager@pharmadem.local</span>
-                <span class="role-tag role-Manager">Manager</span>
-            </div>
-            <div class="account-chip" onclick="fillCreds('employee@pharmadem.local', 'Password@123')">
-                <span>employee@pharmadem.local</span>
-                <span class="role-tag role-Employee">Employee</span>
-            </div>
-        </div>
+    <div class="login-footer">
+        &copy; <?= date('Y') ?> PharmaDEM Solutions. All rights reserved.
     </div>
 </div>
-
-<script>
-function fillCreds(email, pass) {
-    document.getElementById('email').value = email;
-    document.getElementById('password').value = pass;
-    document.getElementById('password').focus();
-}
-</script>
 
 </body>
 </html>

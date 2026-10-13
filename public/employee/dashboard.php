@@ -240,7 +240,7 @@ $scoreMetrics = Evaluation::getAverageScores($userId);
 
                 <a href="?tab=update" class="<?= $currentTab === 'update' ? 'border-blue-500 text-blue-400' : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700' ?> whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm flex items-center space-x-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                    <span>Daily Work Update Form</span>
+                    <span>Daily Work Update</span>
                     <?php if (!$todayUpdate): ?>
                         <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                     <?php endif; ?>
@@ -253,9 +253,7 @@ $scoreMetrics = Evaluation::getAverageScores($userId);
             </nav>
         </div>
 
-        <!-- ================================================================= -->
-        <!-- TAB 1: Task Board / List                                         -->
-        <!-- ================================================================= -->
+        <!-- Tasks Tab -->
         <?php if ($currentTab === 'tasks'): ?>
             <div class="space-y-4">
                 <!-- Status Filter Bar -->
@@ -358,9 +356,7 @@ $scoreMetrics = Evaluation::getAverageScores($userId);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 2: Daily Work Update Form                                    -->
-        <!-- ================================================================= -->
+        <!-- Daily Update Tab -->
         <?php if ($currentTab === 'update'): ?>
             <div class="max-w-3xl mx-auto space-y-6">
                 <!-- Status Banner if Already Submitted -->
@@ -456,9 +452,7 @@ $scoreMetrics = Evaluation::getAverageScores($userId);
             </div>
         <?php endif; ?>
 
-        <!-- ================================================================= -->
-        <!-- TAB 3: History View & Performance Feedback                       -->
-        <!-- ================================================================= -->
+        <!-- History Tab -->
         <?php if ($currentTab === 'history'): ?>
             <div class="space-y-8">
                 <!-- Section 3A: Performance Evaluations & Scores -->
